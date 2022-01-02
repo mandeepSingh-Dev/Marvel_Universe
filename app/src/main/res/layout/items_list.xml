@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadius="10dp"
+
+
+       >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    <ImageView
+        android:id="@+id/characterImage"
+        android:layout_width="180dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+
+        />
+    <TextView
+        android:id="@+id/charcaterName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="A-Bomb HAS"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintRight_toRightOf="@id/characterImage"
+        app:layout_constraintBottom_toBottomOf="@id/characterImage"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="@id/characterImage"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/characterDescription"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginLeft="10dp"
+        android:text="dhjdgfdhfgdhfghdfh"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
