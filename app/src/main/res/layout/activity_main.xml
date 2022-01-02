@@ -30,7 +30,10 @@
             android:id="@+id/AppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/purple_200"
+            android:background="@drawable/shape"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
             >
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -62,6 +65,7 @@
             android:id="@+id/nav_host_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             android:name="androidx.navigation.fragment.NavHostFragment"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -69,17 +73,27 @@
             app:navGraph="@navigation/nav_graph"
 
             />
+        <LinearLayout
+            android:id="@+id/lll"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/SearchrecylerView"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@color/teal_200"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
