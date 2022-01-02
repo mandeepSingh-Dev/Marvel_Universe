@@ -1,19 +1,16 @@
 package com.oyelabs.marvel.universe
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
@@ -23,16 +20,18 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.marveluniverse.R
-import com.google.android.material.snackbar.Snackbar
 import org.json.JSONObject
 
 class Characters_Fragment : Fragment() {
-    lateinit var searchView:androidx.appcompat.widget.SearchView
-    lateinit var recyclerView: RecyclerView
-     var onCallback:MyCallback2?=null
-    var arraylist:ArrayList<list_items>?=null
-    var filterlist:ArrayList<list_items>?=null
+    private lateinit var searchView:androidx.appcompat.widget.SearchView
+    private lateinit var recyclerView: RecyclerView
+    private  var onCallback:MyCallback2?=null
+    private var arraylist:ArrayList<list_items>?=null
+    private var filterlist:ArrayList<list_items>?=null
   //  lateinit var textview:TextView
+
+   lateinit var receiver:BroadcastReceiver
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +53,8 @@ class Characters_Fragment : Fragment() {
         searchView=activity?.findViewById(R.id.searchview)!!
         recyclerView=view.findViewById(R.id.charactersRecyclerView)
        // textview=view.findViewById(R.id.textvieww)
+
+
 
         onCallback=object :MyCallback2{
             override fun onSucces(arrayit: ArrayList<list_items>) {
@@ -87,17 +88,18 @@ class Characters_Fragment : Fragment() {
                         var path = resultobject.getJSONObject("thumbnail").getString("path")
                         var extension = resultobject.getJSONObject("thumbnail").getString("extension")
                         /**creating thumbnail array of path and extension*/
-                        /**creating thumbnail array of path and extension*/
                         var thumnailarray= arrayOf(path,extension)
                         characterList.add( list_items(id,name,description,thumnailarray) )
                     }
 
-                    val myadapter=MyAdapter(requireContext(),characterList)
+                    val myadapter=MyAdapter_forList(requireContext(),characterList)
                     recyclerView.layoutManager=GridLayoutManager(context,2)
                     recyclerView.adapter=myadapter
 
                     onCallback?.onSucces(characterList)
-                    search_showCharacters(characterList)
+                    filterList(characterList)
+                    /**sending list to charcater_Fragment*/
+                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(Intent("SENDING_LIST").putParcelableArrayListExtra("charcaterList",characterList!!))
                 }
             },
             object : Response.ErrorListener {
@@ -111,36 +113,39 @@ class Characters_Fragment : Fragment() {
 
 
     }
-
-    fun search_showCharacters(arraylist:ArrayList<list_items>)
+    private fun filterList(arraylist:ArrayList<list_items>)
     {
-        searchView.setOnQueryTextListener(object:androidx.appcompat.widget.SearchView.OnQueryTextListener{
-            override fun onQueryTextChange(newText: String?): Boolean {
-
-                filterlist?.removeAll(filterlist!!)
-                arraylist?.forEach {
-                    if(it.name.lowercase().contains(newText?.lowercase()!!) /*||it.name.lowercase().equals(newText?.lowercase()!!)*/ )
-                    {
-                        filterlist?.add(it)
-                    }
+       /**Receieving Search query on every textChanging in serachbar MainActivity */
+        receiver=object:BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                var newText = intent?.getStringExtra("newText")
+                if(newText.equals(" "))
+                {
+                    Log.d("siizee_SPACE_ELSE",filterlist?.size.toString())
+                   // recyclerView.visibility=View.GONE
                 }
-                val myadapter=MyAdapter(requireContext(),filterlist!! )
-                recyclerView.layoutManager=GridLayoutManager(context,2)
-                recyclerView.adapter=myadapter
-                return true
+                else if(newText?.isEmpty()!!){
+                    Log.d("siizee_EMPTY_ELSE",filterlist?.size.toString())
+                   // recyclerView.visibility=View.GONE
+                }
+                else{
+                    Log.d("fdfdfdfxcsew", newText!!)
+                    filterlist?.removeAll(filterlist!!)
+                    arraylist?.forEach {
+                        if (it.name.lowercase().contains(newText?.lowercase()!!) /*||it.name.lowercase().equals(newText?.lowercase()!!)*/) {
+                            filterlist?.add(it)
+                        }
+                    }
+                    //SETTING THAT if filterlist is not null then excute beolow code
+                    val myadapter = MyAdapter_forList(requireContext(), filterlist!!)
+                    recyclerView.layoutManager = GridLayoutManager(context, 2)
+                    recyclerView.adapter = myadapter
+                }//end of else block
             }
+             }
+            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(receiver!!, IntentFilter("SEND_QUERY"))
 
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                /* //IMPLEMENT THAT if curentDestination is charctaerFRAGMENT THEN DO NOTHING OTHERWISE
-                 // THEN NAVIGATE TO CHARACTER FRAGMENT*/
-              /*  Snackbar.make(view,query!!,2000).show()
-                Navigation.findNavController(view).navigate(R.id.fragment_character_)*/
-
-                return true
-            }
-        })
-    }
-
+        }
     fun setOnListener(callback:MyCallback2)
     {
         onCallback=callback
