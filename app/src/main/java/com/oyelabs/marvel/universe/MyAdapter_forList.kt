@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.marveluniverse.R
 
-class MyAdapter(context:Context,characterList:ArrayList<list_items>): RecyclerView.Adapter<MyAdapter.MyViewHolder>()
+class MyAdapter_forList(context:Context, characterList:ArrayList<list_items>): RecyclerView.Adapter<MyAdapter_forList.MyViewHolder>()
 {
    var context=context
     var arraylist=characterList
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
      var view=LayoutInflater.from(context).inflate(R.layout.items_list,parent,false)
@@ -48,7 +49,11 @@ class MyAdapter(context:Context,characterList:ArrayList<list_items>): RecyclerVi
             Log.d("dsdsds","fjksd")
             var animation=AnimationUtils.loadAnimation(context,R.anim.items_animation)
             itemView?.animation=animation
+           itemView?.setOnClickListener {
+
+           }
         }
+
 
     }
 
