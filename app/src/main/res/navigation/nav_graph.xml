@@ -6,12 +6,20 @@
     app:startDestination="@id/fragment_characterslist_">
     <fragment
         android:id="@+id/fragment_characterslist_"
-        android:name="com.oyelabs.marvel.universe.Characters_Fragment"
+        android:name="com.oyelabs.marvel.universe.CharactersList_Fragment"
         android:label="fragment_characterslist_"
-        tools:layout="@layout/fragment_characterslist_" />
+        tools:layout="@layout/fragment_characterslist_" >
+        <action
+            android:id="@+id/action_fragment_characterslist__to_fragment_character_"
+            app:destination="@id/fragment_character_" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_character_"
         android:name="com.oyelabs.marvel.universe.Character_Fragment"
         android:label="fragment_character_"
-        tools:layout="@layout/fragment_character_" />
+        tools:layout="@layout/fragment_character_" >
+        <action
+            android:id="@+id/action_fragment_character__to_fragment_characterslist_"
+            app:destination="@id/fragment_characterslist_" />
+    </fragment>
 </navigation>

@@ -41,7 +41,7 @@ class MyAdapter_forList(context:Context, characterList:ArrayList<list_items>): R
             bundle?.putInt("CHARACTER_ID",arraylist.get(position).id)
             var navController=Navigation.findNavController(holder.itemView)
 
-              navController.navigate(R.id.fragment_character_,bundle)
+              navController.navigate(R.id.action_fragment_characterslist__to_fragment_character_,bundle)
         }
 
 

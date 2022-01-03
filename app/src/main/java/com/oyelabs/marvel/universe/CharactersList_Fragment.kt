@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,12 +24,13 @@ import com.android.volley.toolbox.Volley
 import com.example.marveluniverse.R
 import org.json.JSONObject
 
-class Characters_Fragment : Fragment() {
+class CharactersList_Fragment : Fragment() {
     private lateinit var searchView:androidx.appcompat.widget.SearchView
     private lateinit var recyclerView: RecyclerView
     private  var onCallback:MyCallback2?=null
     private var arraylist:ArrayList<list_items>?=null
     private var filterlist:ArrayList<list_items>?=null
+    private lateinit var progressBar:ProgressBar
   //  lateinit var textview:TextView
 
    lateinit var receiver:BroadcastReceiver
@@ -52,6 +55,7 @@ class Characters_Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         searchView=activity?.findViewById(R.id.searchview)!!
         recyclerView=view.findViewById(R.id.charactersRecyclerView)
+        progressBar=activity?.findViewById(R.id.progressBar)!!
        // textview=view.findViewById(R.id.textvieww)
 
 
@@ -95,6 +99,7 @@ class Characters_Fragment : Fragment() {
                     val myadapter=MyAdapter_forList(requireContext(),characterList)
                     recyclerView.layoutManager=GridLayoutManager(context,2)
                     recyclerView.adapter=myadapter
+                    progressBar.visibility=View.GONE
 
                     onCallback?.onSucces(characterList)
                     filterList(characterList)
@@ -104,7 +109,8 @@ class Characters_Fragment : Fragment() {
             },
             object : Response.ErrorListener {
                 override fun onErrorResponse(error: VolleyError?) {
-                    Log.d("dfhdj", error?.message + "d")
+                    progressBar.visibility=View.VISIBLE
+                    Toast.makeText(context!!,error?.cause.toString(),Toast.LENGTH_SHORT).show()
                 }
             })
         requestQueue?.add(jsonObjectRequest)

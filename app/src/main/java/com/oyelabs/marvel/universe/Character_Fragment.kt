@@ -28,7 +28,7 @@ import org.json.JSONObject
 class Character_Fragment : Fragment() {
 
     private lateinit var receiver: BroadcastReceiver
-    private var charactersListsFragment:Characters_Fragment?=null
+    private var charactersListsListFragment:CharactersList_Fragment?=null
     private lateinit var receiver2:BroadcastReceiver
     private var charcaterId:Int?=null
     private var requestQueue:RequestQueue?=null
@@ -42,7 +42,7 @@ class Character_Fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        charactersListsFragment= Characters_Fragment()
+        charactersListsListFragment= CharactersList_Fragment()
         characterList=ArrayList()
         seriesArrayList=ArrayList()
 
@@ -79,7 +79,8 @@ class Character_Fragment : Fragment() {
             getting(charcaterId!!)
         }
 
-        }//End of onViewCreated
+        }
+     //End of onViewCreated
     fun getting(characterID:Int){
 
         var url="https://gateway.marvel.com/v1/public/characters/"+characterID+"?ts=1&apikey=466d97f4e5bf657ce8780e7b317c57d7&hash=4a866f2f4a437b10fcd9744b8286b4db"
@@ -115,7 +116,7 @@ class Character_Fragment : Fragment() {
                 val extension=characterList?.get(0)?.thumbnailArry?.get(1)
                 var imageLink=path+"."+extension
                 var finalImagelink=imageLink.replace("http","https")
-                Log.d("ifgggwvhwerjvkerov1",finalImagelink)
+                Log.d("ifgggwhyhyyhyh5",finalImagelink)
                 Glide.with(context!!).load(finalImagelink).into(characterimagee!!)
 
                 DescriptionTEXT?.text =characterList?.get(0)?.description
