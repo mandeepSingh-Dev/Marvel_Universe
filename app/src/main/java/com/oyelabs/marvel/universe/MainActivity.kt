@@ -5,30 +5,35 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.SearchView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.marveluniverse.R
+import com.google.android.material.snackbar.Snackbar
+import android.net.NetworkInfo
+import java.lang.Exception
+import android.net.wifi.WifiManager
 
-import org.json.JSONObject
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
-    var myCallback:Characters_Fragment.MyCallback2?=null
+    var myCallback:CharactersList_Fragment.MyCallback2?=null
     private  lateinit var searchView:androidx.appcompat.widget.SearchView
     private lateinit var recyclerViewLinearLayout:LinearLayout
     private lateinit var recyclerView: RecyclerView
@@ -36,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var receiver2:BroadcastReceiver
     private var chracterList:ArrayList<list_items>?=null
     private  var filterListt:ArrayList<String>?=null
+    var navHostFragment:NavHostFragment?=null
+    var navController:NavController?=null
 
 
     @SuppressLint("RestrictedApi", "ResourceType")
@@ -49,10 +56,19 @@ class MainActivity : AppCompatActivity() {
         filterListt=ArrayList()
         localBroadcastManager = LocalBroadcastManager.getInstance(applicationContext)
 
-     var navHostFragment = supportFragmentManager?.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
-     var navController = navHostFragment.navController
-     var string = navController.currentDestination?.displayName!!
-     Log.d("ejreuyruehfn", navController.currentDestination?.label.toString())
+        var con=NetworkCheck.isNetworkAvailable(applicationContext)
+        if(con==false)
+        {
+            val wifi = getApplicationContext().getSystemService(WIFI_SERVICE) as WifiManager
+
+            var snackbar=Snackbar.make(recyclerView,"No Internet Connection",4000).show()
+
+        }
+
+      navHostFragment = supportFragmentManager?.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment
+      navController = navHostFragment?.navController
+     var string = navController?.currentDestination?.displayName!!
+     Log.d("ejreuyruehfn", navController?.currentDestination?.label.toString())
 
      Toast.makeText(this, string + "", Toast.LENGTH_SHORT).show()
 
@@ -74,7 +90,7 @@ class MainActivity : AppCompatActivity() {
      searchView.setOnQueryTextListener(object :
          androidx.appcompat.widget.SearchView.OnQueryTextListener {
          override fun onQueryTextChange(newText: String?): Boolean {
-             var fragmentLabel = navController.currentDestination?.label.toString()
+             var fragmentLabel = navController?.currentDestination?.label.toString()
              if (fragmentLabel.equals("fragment_characterslist_")) {
                  Log.d("dfdfdfddf", "dfd" + newText)
 
@@ -95,7 +111,7 @@ class MainActivity : AppCompatActivity() {
          }
 
          override fun onQueryTextSubmit(query: String?): Boolean {
-             navController.navigate(R.id.fragment_character_)
+            // navController?.navigate(R.id.fragment_character_)
              return true
          }
      })
@@ -139,4 +155,16 @@ class MainActivity : AppCompatActivity() {
          }
 
     }
+    //onBackPressed to navigate from charcater_Fragment to CharcaterList_Fragment on click Back button
+    override fun onBackPressed() {
+        var fragmentLABEL=navController?.currentDestination?.label.toString()
+        if(fragmentLABEL.equals("fragment_characterslist_"))
+        {
+            super.onBackPressed()
+        }
+        else{
+            navController?.navigate(R.id.action_fragment_character__to_fragment_characterslist_)
+        }
+    }
+
 }
